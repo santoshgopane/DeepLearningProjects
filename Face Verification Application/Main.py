@@ -18,7 +18,7 @@ import pickle
 # from keras.models import load_model
 
 FaceTracker = keras.models.load_model(
-    "C:/Deep Learning Projects/Face Verification Application/NNmodelv2.h5"
+    "C:/Deep Learning Projects/Face Verification Application/Model/NNmodelv3.h5"
 )
 
 KerasModel = keras.models.load_model(
@@ -27,11 +27,10 @@ KerasModel = keras.models.load_model(
 
 LoadedModel = pickle.load(
     open(
-        "C:/Deep Learning Projects/Face Verification Application/model/FaceDetectionModelV4.model",
+        "C:/Deep Learning Projects/Face Verification Application/model/FaceDetectionV6.model",
         "rb",
     )
 )
-
 
 def CaptureFaceEmbedding(Model, FacePixels):
     FacePixels = FacePixels.astype("float32")
@@ -47,7 +46,7 @@ cap = cv2.VideoCapture(0)
 while cap.isOpened():
 
     _, frame = cap.read()
-    print(frame.size)
+    print(frame.shape)
     # frame = frame
     frame = frame[50:500, 50:500, :]
     print(frame.size)
@@ -61,6 +60,12 @@ while cap.isOpened():
     sample_coords = yhat[1][0]
     print("first:", tuple(np.multiply(sample_coords[:2], [450, 450]).astype(int)))
     print("second:", tuple(np.multiply(sample_coords[2:], [450, 450]).astype(int)))
+    x1, y1 = tuple(np.multiply(sample_coords[:2], [450, 450]).astype(int))
+    x2, y2 = tuple(np.multiply(sample_coords[2:], [450, 450]).astype(int))
+    print(x2 - x1)
+    print(y2 - y1)
+    if x2 - x1 < 100 or y2 - y1 < 100:
+        print("INVALID")
     face = np.array(frame)
     cropped_face = Image.fromarray(face)
     cropped_face_resize = cropped_face.resize(((160, 160)))
